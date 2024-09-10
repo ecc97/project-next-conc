@@ -53,7 +53,7 @@ const Select: React.FC<SelectProps> = ({ id, name, value, onChange, disabled, re
             required={required}
             {...styledProps}
         >
-            <option value="" hidden selected disabled>Seleccionar Rol</option>  // Add an empty option for users to select
+            <option value="" hidden disabled>Seleccionar Rol</option>
             {options.map((option) => (
                 <option key={option.value} value={option.value}>
                     {option.label}
