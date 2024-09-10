@@ -6,7 +6,7 @@ interface StyledContainerProps {
     $fC?: string;
 }
 
-export const Container = styled.div<StyledContainerProps>`
+export const Container = styled.section<StyledContainerProps>`
     display: flex;
     flex-direction: ${(props) => props.$fC || 'row'};
     background-color: ${colors.white};
@@ -15,10 +15,11 @@ export const Container = styled.div<StyledContainerProps>`
     `
 
 
-export const CardForm = styled.div<{width?: string, height?: string}>`
+export const ContainerForm = styled.div<{width?: string, height?: string}>`
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    gap: 1rem;
     width: 50%;
     padding: 6rem;
     background-color: ${colors.secondary};
@@ -32,6 +33,15 @@ export const CardForm = styled.div<{width?: string, height?: string}>`
         border-top: 1px solid ${colors.secondary};
         border-bottom: 1px solid ${colors.secondary};
     }
+
+    @media (width <= 768px) {
+        padding: 3rem;
+        width: 100%;
+    }
+
+    @media (width <= 480px) {
+        padding: 1rem;
+    }
     `
 
 export const BackgroundForm = styled.div<{width?: string, height?: string}>`
@@ -41,6 +51,10 @@ export const BackgroundForm = styled.div<{width?: string, height?: string}>`
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    @media (width <= 768px) {
+        display: none;
+    }
 `
 
 export const FormContent = styled.form<{$bg?: string, color?: string}>`
@@ -61,11 +75,15 @@ export const FormContent = styled.form<{$bg?: string, color?: string}>`
     }
 `
 
-export const ImageContainer = styled.div`
+export const GroupTitle = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    color: ${colors.white};
+
+    h1 {
+        padding: 0;
+    }
 `
 
 export const InputContent = styled.div`
