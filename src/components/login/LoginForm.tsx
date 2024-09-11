@@ -8,8 +8,8 @@ import Input from "@/components/ui/Input.ui"
 import Button from "@/components/ui/Button.ui"
 import { Container, ContainerForm, InputContent, TextError, BackgroundForm, GroupTitle } from "@/components/form/styledForm"
 import Link from "next/link"
-import Image from "next/image"
 import { colors } from "@/app/GlobalStyles"
+import Loader from "@/components/ui/Loader.ui"
 
 interface UserLogin {
     username: string
@@ -25,6 +25,7 @@ const initialState: UserLogin = {
 const Login: React.FC = () => {
     const [user, setUser] = useState<UserLogin>(initialState)
     const [error, setError] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [e.target.name]: e.target.value })
@@ -33,6 +34,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setError("")
+        setIsLoading(true)
         try {
             const response = await fetch(`http://localhost:4000/users?username=${user.username}`)
 
@@ -58,6 +60,10 @@ const Login: React.FC = () => {
         } catch (error) {
             console.error('Error:', error)
             setError('Error')
+        } finally {
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 2000)
         }
         console.log(user)
         setUser(initialState)
@@ -98,7 +104,13 @@ const Login: React.FC = () => {
                         />
                     </InputContent>
                     {error && <TextError>{error}</TextError>}
-                    <Button type="submit" disabled={user.username === "" || user.password === ""} $bgColor={colors.white}>Ingresar</Button>
+                    <Button type="submit" disabled={user.username === "" || user.password === ""} $bgColor={colors.white}>
+                        {isLoading ? (
+                            <Loader /> 
+                        ) : (
+                            <span>Ingresar</span>
+                        )}
+                    </Button>
                     <p>¿No tienes una cuenta? <Link href="/pages/register">Registrarse</Link></p>
                 </Form>
             </ContainerForm>
