@@ -5,11 +5,13 @@ import { useState } from "react"
 import Form from "@/components/form/Form"
 import Label from "@/components/ui/Label.ui"
 import Input from "@/components/ui/Input.ui"
+import InputPassword from "@/components/ui/InputPassword.ui"
 import Button from "@/components/ui/Button.ui"
 import { Container, ContainerForm, InputContent, TextError, BackgroundForm, GroupTitle } from "@/components/form/styledForm"
 import Link from "next/link"
 import { colors } from "@/app/GlobalStyles"
 import Loader from "@/components/ui/Loader.ui"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 interface UserLogin {
     username: string
@@ -26,6 +28,7 @@ const Login: React.FC = () => {
     const [user, setUser] = useState<UserLogin>(initialState)
     const [error, setError] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [e.target.name]: e.target.value })
@@ -92,8 +95,8 @@ const Login: React.FC = () => {
                     </InputContent>
                     <InputContent>
                         <Label label="Contraseña" for="password" />
-                        <Input
-                            type="password"
+                        <InputPassword
+                            type={showPassword ? "text" : "password"}
                             id="password"
                             name="password"
                             placeholder="Contraseña"
@@ -101,6 +104,11 @@ const Login: React.FC = () => {
                             onChange={handleChange}
                             $padding="1rem"
                             required
+                            icon={
+                                <span onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <FaEyeSlash color={colors.white} /> : <FaEye color={colors.white} />}
+                                </span>
+                            }
                         />
                     </InputContent>
                     {error && <TextError>{error}</TextError>}
