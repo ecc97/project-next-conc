@@ -2,6 +2,7 @@
 
 import React from "react"
 import { useState } from "react"
+import { login } from "@/api/auth"
 import Form from "@/components/form/Form"
 import Label from "@/components/ui/Label.ui"
 import Input from "@/components/ui/Input.ui"
@@ -39,30 +40,19 @@ const Login: React.FC = () => {
         setError("")
         setIsLoading(true)
         try {
-            const response = await fetch(`http://localhost:4000/users?username=${user.username}`)
+            const userData = await login(user)
 
-            if (!response.ok) {
-                throw new Error('Server Error')
+            if (!userData) {
+                setError("Invalid credentials")
+            } else if (userData.password === user.password) {
+                console.log("Login successfull!")
+                setUser(initialState)
+            } else {
+                setError("Invalid password")
             }
-
-            const data: UserLogin[] = await response.json()
-
-            if(data.length > 0) {
-                const userData = data[0]
-                if(userData.password === user.password) {
-                    console.log('Success:', data)
-                    console.log('Login successfull!')
-                    setUser(initialState)
-                } else {
-                    setError('Invalid password')
-                }
-            } else {    
-                setError('Invalid credentials')
-            }
-            
         } catch (error) {
             console.error('Error:', error)
-            setError('Error')
+            setError('Error during login')
         } finally {
             setTimeout(() => {
                 setIsLoading(false)
