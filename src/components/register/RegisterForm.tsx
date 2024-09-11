@@ -11,6 +11,7 @@ import Button from "@/components/ui/Button.ui"
 import { Container, ContainerForm, GroupTitle, InputContent, BackgroundForm } from "@/components/form/styledForm"
 import Link from "next/link"
 import { colors } from "@/app/GlobalStyles"
+import Loader from "@/components/ui/Loader.ui"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 interface UserData{
@@ -31,6 +32,7 @@ const Register: React.FC = () => {
     const [user, setUser] = useState<UserData>(initialState)
     const [error, setError] = useState<string>("")
     const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -43,6 +45,7 @@ const Register: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setError("")
+        setIsLoading(true)
 
         try {
             const response = await fetch("http://localhost:4000/users", {
@@ -66,6 +69,10 @@ const Register: React.FC = () => {
         } catch (error) {
             console.error("Error:", error)
             setError("Error al registrar usuario")
+        } finally {
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 2000)
         }
     }
     return (
@@ -137,7 +144,13 @@ const Register: React.FC = () => {
                     </InputContent>
 
                     {error && <p>{error}</p>}
-                    <Button type="submit" disabled={ user.email === "" || user.username === "" || user.password === "" || user.role === ""} $bgColor={colors.white}>Registrarse</Button>
+                    <Button type="submit" disabled={ user.email === "" || user.username === "" || user.password === "" || user.role === ""} $bgColor={colors.white}>
+                        {isLoading ? (
+                            <Loader />
+                        ) : (
+                            <span>Registrarse</span>
+                        )}
+                    </Button>
                     <p>¿Ya tienes una cuenta? <Link href="/pages/login">Inicia sesión</Link></p>
                 </Form>
             </ContainerForm>
