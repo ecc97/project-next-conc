@@ -2,6 +2,7 @@
 
 import React from "react"
 import { useState } from "react"
+import { register } from "@/api/register"
 import Form from "@/components/form/Form"
 import Label from "@/components/ui/Label.ui"
 import Input from "@/components/ui/Input.ui"
@@ -48,23 +49,14 @@ const Register: React.FC = () => {
         setIsLoading(true)
 
         try {
-            const response = await fetch("http://localhost:4000/users", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(user),
-            })
+            const data = await register(user)
 
-            if (!response.ok) {
-                throw new Error("Server Error")
+            if (data) {
+                console.log("Success:", data)
+                console.log("User registered successfully!")
+                console.log(user)
+                setUser(initialState)
             }
-            
-            const data: UserData = await response.json()
-            console.log("Success:", data)
-            console.log("User registered successfully!")
-            console.log(user)
-            setUser(initialState)
             
         } catch (error) {
             console.error("Error:", error)
